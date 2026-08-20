@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from fastapi.testclient import TestClient
 from app.main import app
 
@@ -9,12 +13,10 @@ def test_health():
     assert response.json()["status"] == "healthy"
 
 def test_create_and_get_task():
-    # Create
     response = client.post("/tasks", json={"title": "Test Task", "description": "Demo"})
     assert response.status_code == 201
     task_id = response.json()["id"]
 
-    # Get
     response = client.get(f"/tasks/{task_id}")
     assert response.status_code == 200
     assert response.json()["title"] == "Test Task"
